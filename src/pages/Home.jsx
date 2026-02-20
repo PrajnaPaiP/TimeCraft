@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import ProductCard from "../components/ProductCard";
+import { useState } from "react";
 import SectionTitle from "../components/SectionTitle";
 import Footer from "../components/Footer";
 import s1 from "../assets/watch_main1.png";
@@ -35,6 +36,8 @@ const products = [
 ];
 
 export default function Home() {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
   return (
     <>
       <Navbar />
@@ -49,11 +52,29 @@ export default function Home() {
 
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8">
             {products.map((product) => (
-              <ProductCard key={product.id} {...product} />
+              <ProductCard key={product.id} {...product} onSeeMore={() => setSelectedProduct(product)} />
             ))}
           </div>
         </div>
       </section>
+
+      {/* Modal */}
+      {selectedProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
+              onClick={() => setSelectedProduct(null)}
+            >
+              &times;
+            </button>
+            <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-48 object-contain rounded mb-4" />
+            <h3 className="text-xl font-bold mb-2">{selectedProduct.name}</h3>
+            <p className="text-amber-600 font-bold mb-2">₹{selectedProduct.price}</p>
+            <p className="text-gray-700 text-sm">More details about this product can go here.</p>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </>
